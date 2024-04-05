@@ -10,41 +10,25 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
-public class TransferPage {
+    public class TransferPage {
+        private final SelenideElement transferButton = $("[data-test-id='action-transfer']");
+        private final SelenideElement amountInputNew = $("[data-test-id='amount'] input");
+        private final SelenideElement fromImput = $("[data-test-id='from'] input");
+        private final SelenideElement transferHead = $(byText("Пополнение карты"));
+        private final SelenideElement errorMessage = $("[data-test-id='error-message']");
 
-    private SelenideElement amountInput = $("[data-test-id='amount'] input");
-    private SelenideElement fromInput = $("[data-test-id='from'] input");
-    private SelenideElement actionButton = $("[data-test-id='action-transfer']");
-    private SelenideElement errorNotification = $("[data-test-id='error-notification']");
-    private SelenideElement cancelButton = $("[data-test-id='action-cancel']");
-    private SelenideElement headerTransfer = $(byText("Пополнение карты"));
+        public TransferPage() {
+            transferHead.shouldBe(visible);
+        }
 
-    public TransferPage() {
-        headerTransfer.shouldBe(visible);
-    }
-    public DashboardPage successfulTransfer(DataHelper.Transfer info) {
-        amountInput.setValue(info.getAmount().toString());
-        fromInput.setValue(info.getCardNumber());
-        actionButton.click();
-        return new DashboardPage();
+        public DashboardPage Transfer(String amountToTransfer, DataHelper.CardInfo cardInfo) {
+            amountInputNew.setValue(amountToTransfer);
+            fromImput.setValue(cardInfo.getCardNumber());
+            transferButton.click();
+            return new DashboardPage();
+        }
 
+        public void Error(String expectedText) {
+            errorMessage.shouldHave(exactText(expectedText), Duration.ofSeconds(15)).shouldBe(visible);
+        }
     }
-    public TransferPage emptyTransfer(String expectedError) {
-        amountInput.setValue("");
-        fromInput.setValue("");
-        actionButton.click();
-        errorNotification.shouldBe(visible);
-        return null;
-    }
-
-    public DashboardPage cancelTransfer(String amountToTransfer, DataHelper.Transfer info) {
-        amountInput.setValue(amountToTransfer);
-        fromInput.setValue(info.getCardNumber());
-        cancelButton.click();
-        return new DashboardPage();
-    }
-
-    public void ErrorMessage(String expectedText) {
-        errorNotification.shouldHave(exactText(expectedText), Duration.ofSeconds(15)).shouldBe(visible);
-    }
-}
