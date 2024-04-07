@@ -1,6 +1,5 @@
 package ru.netology.test.test;
 
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +10,6 @@ import ru.netology.test.page.LoginPage;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.netology.test.data.DataHelper.*;
 
 
@@ -42,8 +40,8 @@ class MoneyTransferTest {
         dashboardPage = transferPage.Transfer(String.valueOf(amount), firstCardInfo);
         var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
         var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
-        assertEquals(expectedDBalanceFirstCard, actualBalanceFirstCard);
-        assertEquals(expectedDBalanceSecondCard, actualBalanceSecondCard);
+        Assertions.assertEquals(expectedDBalanceFirstCard, actualBalanceFirstCard);
+        Assertions.assertEquals(expectedDBalanceSecondCard, actualBalanceSecondCard);
     }
 
 
@@ -55,14 +53,14 @@ class MoneyTransferTest {
         var firstCardBalance = dashboardPage.getCardBalance(firstCardInfo);
         var secondCardBalance = dashboardPage.getCardBalance(secondCardInfo);
         var amount = generateValidAmount(secondCardBalance);
-        var expectedDBalanceFirstCard = secondCardBalance - amount;
-        var expectedDBalanceSecondCard = firstCardBalance + amount;
+        var expectedDBalanceFirstCard = firstCardBalance + amount;
+        var expectedDBalanceSecondCard = secondCardBalance - amount;
         var transferPage = dashboardPage.selectCardToTransfer(firstCardInfo);
         dashboardPage = transferPage.Transfer(String.valueOf(amount), secondCardInfo);
         var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
         var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
-        assertEquals(expectedDBalanceFirstCard, actualBalanceFirstCard);
-        assertEquals(expectedDBalanceSecondCard, actualBalanceSecondCard);
+        Assertions.assertEquals(expectedDBalanceFirstCard, actualBalanceFirstCard);
+        Assertions.assertEquals(expectedDBalanceSecondCard, actualBalanceSecondCard);
     }
     @Test
     @DisplayName("Перевод средств больше баланса")
@@ -77,8 +75,8 @@ class MoneyTransferTest {
         transferPage.Error("Сумма перевода превышает остаток на карте");
         var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
         var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
-        assertEquals(firstCardBalance, actualBalanceFirstCard);
-        assertEquals(secondCardBalance, actualBalanceSecondCard);
+        Assertions.assertEquals(firstCardBalance, actualBalanceFirstCard);
+        Assertions.assertEquals(secondCardBalance, actualBalanceSecondCard);
     }
 
 }
